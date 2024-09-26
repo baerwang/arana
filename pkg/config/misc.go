@@ -35,6 +35,8 @@ import (
 	"github.com/arana-db/arana/pkg/util/log"
 )
 
+var BootOpts *BootOptions
+
 // LoadBootOptions loads BootOptions from specified file path.
 func LoadBootOptions(path string) (*BootOptions, error) {
 	content, err := os.ReadFile(path)
@@ -59,6 +61,7 @@ func LoadBootOptions(path string) (*BootOptions, error) {
 		return nil, errors.Wrap(err, "failed to validate boot config")
 	}
 
+	BootOpts = &cfg
 	log.Init(cfg.Logging)
 	return &cfg, nil
 }
@@ -69,7 +72,7 @@ func LoadTenantOperatorFromPath(path string) (TenantOperator, error) {
 	if err != nil {
 		return nil, err
 	}
-	if err := Init(*cfg.Config, cfg.Spec.APIVersion); err != nil {
+	if err = Init(*cfg.Config, cfg.Spec.APIVersion); err != nil {
 		return nil, err
 	}
 
